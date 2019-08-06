@@ -290,3 +290,16 @@ def investigate(df_listing_scaled, pca, i):
     return pos_list, neg_list
     
 
+def check_difference(pos_list, neg_list, df_listing_poor, df_listing_high):
+    '''
+    Print original features that are stongly related with a corresponding pca component.
+    '''
+    data_pos = [[df_listing_high[x].mean(), df_listing_poor[x].mean()] for x in pos_list]
+    data_neg = [[df_listing_high[x].mean(), df_listing_poor[x].mean()] for x in neg_list]
+    tmp_pos = pd.DataFrame(data=data_pos , index=pos_list, columns=['high', 'poor'])
+    tmp_neg = pd.DataFrame(data=data_neg , index=neg_list, columns=['high', 'poor'])
+    tmp_both = pd.concat([tmp_pos, tmp_neg])
+    tmp_both["difference"] = tmp_both.high - tmp_both.poor
+    tmp_both["difference"] = tmp_both["difference"].abs()
+    result = tmp_both.sort_values(by=['difference'], ascending=False)
+    return result
