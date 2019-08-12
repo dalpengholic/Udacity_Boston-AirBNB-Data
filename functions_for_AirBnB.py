@@ -11,11 +11,10 @@ import copy
 
 def load_bnb_files():
     '''Load AirBnB files'''
-    df_listing = pd.read_csv('./listings.csv')
-    df_calendar = pd.read_csv('./calendar.csv')
-    df_reviews = pd.read_csv('./reviews.csv')
-    
-    return df_listing, df_calendar, df_reviews
+    df_listing = pd.read_csv('./data/listings.csv')
+    df_calendar = pd.read_csv('./data/calendar.csv')
+
+    return df_listing, df_calendar
 
 
 
