@@ -11,8 +11,8 @@
     3. [Run](#run)
 3. [File Structure](#file_structure)
 4. [Results](#results)
-    1. [Notebooks](#notebooks)
-    2. [Posting on Medium](#things_to_be_improved)
+    1. [Notebook](#notebook)
+    2. [A blog post](#a_blog_post)
 5. [License](#license)
 
 
@@ -70,15 +70,13 @@ Clone the repositor below.
 ```
 <a name="results"></a>
 ## Results
-<a name="web_app"></a>
-### Web App
-1. Main page of the web app. It contains the two plots, which are the summary of statistic of a training dataset. 
-The first plot shows the distribution of message genre. The second plot shows frequency of categories
-![main page](https://github.com/dalpengholic/Udacity_Disaster_response_project/blob/master/sample/main.png)
+<a name="notebook"></a>
+### Notebook
+[click to see the final version of the notebook](https://github.com/dalpengholic/Udacity_Boston-AirBNB-Data/blob/master/p4_Boston_AirBnB_with%20CRISP-DM%20v1.ipynb)
 
-2. Result of input new message on the web app. When a user input a new message about disaster, the trained model classifies where the message belongs to.
-![search page](https://github.com/dalpengholic/Udacity_Disaster_response_project/blob/master/sample/search.png)
-<a name="things_to_be_improved"></a>
+<a name="a_blog_post"></a>
+### A blog post
+[click to see the final version of the notebook](https://medium.com/@dalpengholic/the-5-ways-to-be-successful-hosts-of-airbnb-b0c02612f5fb)
 
 
 <a name="license"></a>
