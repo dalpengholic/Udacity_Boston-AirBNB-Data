@@ -76,7 +76,7 @@ Clone the repositor below.
 
 <a name="a_blog_post"></a>
 ### A blog post
-[click to see the final version of the notebook](https://medium.com/@dalpengholic/the-5-ways-to-be-successful-hosts-of-airbnb-b0c02612f5fb)
+[click to see the a blog post on Medium.com](https://medium.com/@dalpengholic/the-5-ways-to-be-successful-hosts-of-airbnb-b0c02612f5fb)
 
 
 <a name="license"></a>
