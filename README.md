@@ -72,11 +72,11 @@ Clone the repositor below.
 ## Results
 <a name="notebook"></a>
 ### Notebook
-[click to see the final version of the notebook](https://github.com/dalpengholic/Udacity_Boston-AirBNB-Data/blob/master/p4_Boston_AirBnB_with%20CRISP-DM%20v1.ipynb)
+[Click to see the final version of the notebook](https://github.com/dalpengholic/Udacity_Boston-AirBNB-Data/blob/master/p4_Boston_AirBnB_with%20CRISP-DM%20v1.ipynb)
 
 <a name="a_blog_post"></a>
 ### A blog post
-[click to see the a blog post on Medium.com](https://medium.com/@dalpengholic/the-5-ways-to-be-successful-hosts-of-airbnb-b0c02612f5fb) 
+[Click to see the a blog post on Medium.com](https://medium.com/@dalpengholic/the-5-ways-to-be-successful-hosts-of-airbnb-b0c02612f5fb) 
 
 
 <a name="license"></a>
