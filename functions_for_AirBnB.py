@@ -128,21 +128,29 @@ def clean_listing_df(df_listing):
     Output :
     - Cleaned df_listing
     '''
-    # Drop columns having 50% of nan value
+    # Drop columns having 50% of nan value. There were reasons that I decided 50% the threshold for dropping columns.
+    # 1. Easy to see the dataframe and to check the meaning of the columns.
+    # 2. Decide which ones have to be dropped.
+    # The candidates columns to be dropped are 'notes', 'neighbourhood_group_cleansed', 'square_feet', 'weekly_price', 'monthly_price', 'security_deposit', 'has_availability', 'license', 'jurisdiction_names'. Most of them are duplicated to other columns or irrelavant except  'security_deposit' column. I didn't do imputing by the mean or mode of the column because it can distort real shape. I didn't do one-hot-encoding to make the dataframe straightforward. 'security_deposit' has 55 unique values.
     df_missing = df_listing.isna().mean()
     df_listing_modi1 = df_listing.drop(df_missing[df_missing>0.5].index.to_list(), axis=1)
-    # Drop columns related with urls and other irrelevant columns
+    # Drop columns related with urls and other irrelevant columns. 
+    # url and othe columns are all unique or useless.
     remove_list1 = ['listing_url', 'scrape_id', 'last_scraped', 'thumbnail_url', 'medium_url', 'picture_url', 'xl_picture_url', 'host_url', 
                 'host_thumbnail_url', 'host_picture_url', 'country_code', 'country']
     df_listing_modi1.drop(remove_list1, axis=1, inplace=True)
     # Drop the columns because of data overlap [city, smart_location], Only one value [state], 
-    # Wrong data [market, calendar_last_scraped]
+    # Drop the wrong data [market, calendar_last_scraped]
     remove_list2 = ['smart_location', 'state', 'name', 'summary', 'space', 'description','neighborhood_overview',
                 'transit','access','market','calendar_last_scraped']
     df_listing_modi1.drop(remove_list2, axis=1, inplace=True)
     
-    # Modify 'house_rules' columns to 'house_rules_exist_tf' having True value if there is a rule.
+    # Modify 'house_rules' column to 'house_rules_exist_tf' having True value if there is a rule.
     # False value, if there is no rule.
+    # Houes_rules are different for every host. So it is not practical to use one-hot-encoding. Instead of that,
+    #  It is changed to binary type, which is there is rule in a house, True, otherwise, False.
+    # This can save some information, which is better than just dropping.
+
     df_listing_modi1['house_rules_exist_tf']= pd.notna(df_listing_modi1.house_rules)
     df_listing_modi1.drop(['house_rules'], axis=1, inplace=True)
     # Remove columns having 1000 unique string valuses and irrelevant data
@@ -159,6 +167,7 @@ def clean_listing_df(df_listing):
         df_listing_modi2[i] = df_listing_modi2[i].astype(float)
     
     # Modify and Split values in 'amenities' column
+    # Amenities can be one of reason that potential candidate might consider.
     df_listing_modi2.amenities = df_listing_modi2.amenities.str.replace("[{}]", "")
     df_amenities = df_listing_modi2.amenities.str.get_dummies(sep = ",")
     df_amenities = df_amenities.add_prefix('amenities_')
@@ -166,6 +175,8 @@ def clean_listing_df(df_listing):
     df_listing_modi2 = df_listing_modi2.drop('amenities', axis=1)
     
     # Use get_dummies for columns having unique values less then 10
+    # It is reasonable to use one-hot-encoding if the nunber of unique values are less then 10.
+    # It doesn't lose information, and keep the dataframe simple.
     columns_of_object_less10 =[]
     for i,j in zip(df_listing_modi2.columns.to_list(), df_listing_modi2.dtypes.to_list()):
         if j == object and len(df_listing_modi2[i].value_counts()) < 10 :
@@ -174,6 +185,7 @@ def clean_listing_df(df_listing):
                                       dummy_na=True)
     
     #  Modify 'extra_people' coulmn to get boolean type of 'extra_people_fee_tf'
+    # Instead of dropping, I decided to change 'extra_people' coulmn to binary type to save some information
     df_listing_modi2['extra_people'] = df_listing_modi2['extra_people'].astype(str)
     df_listing_modi2['extra_people']= df_listing_modi2['extra_people'].str.replace('$','')
     df_listing_modi2['extra_people']=df_listing_modi2['extra_people'].str.replace(',','')
@@ -192,6 +204,8 @@ def clean_listing_df(df_listing):
     df_listing_modi2 =  df_listing_modi2.drop(['host_neighbourhood'], axis=1)
     
     # Modify 'calendar_updated' column
+    # Instead of dropping, I decided to change 'calendar_updated' coulmn to binary type (updated within a week or not)
+    # to save some information
     df_listing_modi2["calendar_updated_1weekago"] = np.where(df_listing_modi2['calendar_updated'].str.contains(
         "days|yesterday|today|a week ago")==True, 'yes', 'more_than_1week')
     df_listing_modi2 =  df_listing_modi2.drop(['calendar_updated'], axis=1)
@@ -214,7 +228,9 @@ def clean_listing_df(df_listing):
     df_listing_modi2["host_acceptance_rate_100"] = np.where(df_listing_modi2['host_acceptance_rate'] ==100, True, False)
     df_listing_modi2 =  df_listing_modi2.drop(['host_response_rate','host_acceptance_rate','reviews_per_month'], axis=1)
     
-    #bathrooms, bedrooms, beds, cleaning_fee, review_scores_rating, review_... : : fillna with mean value
+    # bathrooms, bedrooms, beds, cleaning_fee, review_scores_rating, review_... : : fillna with mean value
+    # The empty cell are filled with mean values of corresponding columns. Because these are numerical type,
+    # I thought imputing with mean values is better than dropping or one-hot-encoding
     columns1 = ['bathrooms','bedrooms','beds','cleaning_fee','review_scores_rating','review_scores_accuracy','review_scores_cleanliness','review_scores_checkin',
             'review_scores_communication','review_scores_location','review_scores_value']
     df_listing_modi2[columns1] = df_listing_modi2[columns1].fillna(df_listing_modi2.mean())
@@ -248,6 +264,7 @@ def conditioning_listing_df(df_listing_modi2):
     df_listing_modi2['y_label'] = np.select(condition, label_list, default='normal')
     
     # Drop columns related to 'y_label' column
+    # Without dropping, the remained columns affect model's prediction
     df_listing_modi3 =  df_listing_modi2.drop(['integrated_score_log','number_of_reviews','review_scores_rating', 'review_scores_value',
                                           'review_scores_communication','review_scores_accuracy','review_scores_checkin','review_scores_cleanliness',
                                           'review_scores_location', 'availability_30','availability_60', 'availability_90','availability_365','calculated_host_listings_count'], axis=1)
